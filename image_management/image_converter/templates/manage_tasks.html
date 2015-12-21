@@ -1,0 +1,79 @@
+{% extends './base.html' %}
+
+
+
+{% block manage_tasks %}
+    active
+{% endblock manage_tasks %}
+
+{% block content %}
+    <form name="cancel_tasks" action="{% url 'cancel_tasks' %}" method="post">{% csrf_token %}
+        <input type="submit" value="Cancel selected tasks" class="btn btn-danger">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th> </th>
+                <th> Task status</th>
+                <th> Name</th>
+                <th> File Path</th>
+                <th> Uploaded at</th>
+                <th> Messages</th>
+                <th> Image</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for task in task_list %}
+                {% with task_status=task.celery_status %}
+                    <tr class="{{ task_status }}" id="{{ task.task_id }}">
+                            {% if task_status == 'SUCCESS' %}
+                                <td class="select-task"></td>
+                                <td class="status">
+                                <span class="label label-success">{{ task_status }}</span>
+                                </td>
+                            {% elif task_status == 'STARTED' %}
+                                <td class="select-task">
+                                    <input type="checkbox" name="{{ forloop.counter }}task_id"
+                                           value="{{ task.task_id }}/{{ task.pk }}">
+                                </td>
+                                <td class="status">
+                                <span class="label label-primary">{{ task_status }}</span>
+                                </td>
+                            {% elif task_status == 'PENDING' %}
+                                <td class="select-task">
+                                    <input type="checkbox" name="{{ forloop.counter }}task_id"
+                                           value="{{ task.task_id }}/{{ task.pk }}">
+                                </td>
+                                <td class="status">
+                                <span class="label label-default">{{ task_status }}</span>
+                                </td>
+                            {% elif task_status == 'FAILURE' %}
+                                <td class="select-task"></td>
+                                <td class="status">
+                                <span class="label label-danger">{{ task_status }}</span>
+                                </td>
+                            {% elif task_status == 'REVOKED' %}
+                                <td class="select-task"></td>
+                                <td class="status">
+                                <span class="label label-warning">CANCELED</span>
+                                </td>
+                            {% endif %}
+                        <td class="name"> {{ task.name }} </td>
+                        <td class="file"> {{ task.file }} </td>
+                        <td class="created"> {{ task.uploaded }} </td>
+                        <td class="message"> {% if task.message != None %}{{ task.message }} {% endif %}</td>
+                        <td class="image">
+                            {% if task_status == 'SUCCESS' %}
+                                <a href={{ task.file.url }} target="_blank">
+                                    <img src="{{ task.file.url }}" alt="{{ task.file.url }}" class="task-thumbnail">
+                                </a>
+
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    <p>*Click on the image to download</p>
+{% endblock content %}

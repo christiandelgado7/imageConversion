@@ -1,0 +1,15 @@
+{% extends './base.html' %}
+
+{% block title %}
+    <h2>Create a new Task</h2>
+{% endblock title %}
+{% block create_tasks %}
+    active
+{% endblock create_tasks %}
+
+{% block content %}
+    {% load crispy_forms_tags %}
+    {% crispy task_formset task_formset.form.helper%}
+
+
+{% endblock content %}

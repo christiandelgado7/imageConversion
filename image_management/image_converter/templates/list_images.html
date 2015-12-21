@@ -1,0 +1,32 @@
+{% extends './base.html' %}
+
+{% block title %}
+    <h2>Converted Images</h2>
+    <p>*Click on the image to download</p>
+{% endblock title %}
+{% block list_images %}
+    active
+{% endblock list_images %}
+
+{% block content %}
+    <div class="col-md-12">
+        {% for image in image_list %}
+            {% if forloop.first %}
+                <div class="row">
+            {% endif %}
+        {% if forloop.counter|divisibleby:7 %}
+            </div>
+            <div class="row">
+        {% endif %}
+            <div class="col-md-2 col-sm-4 col-xs-4 image-row">
+                <p><strong>{{ image.name }}</strong></p>
+                <a href={{ image.file.url }} target="_blank">
+                    <img src="{{ image.file.url }}" alt="{{ image.file.url }}" class="image-thumbnail">
+                </a>
+            </div>
+        {% empty %}
+            <p><strong>No images converted.</strong></p>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
