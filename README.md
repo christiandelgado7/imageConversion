@@ -54,6 +54,10 @@ Getting started
 - Start the development server to use the app:
 
     > python manage.py runserver
+    
+- The app can be access to the URL:
+    
+    > http://127.0.0.1:8000/image_converter
 
 Requirements
 ============

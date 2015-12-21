@@ -1,7 +1,6 @@
-from celery.result import AsyncResult
 from django.db import models
-from model_utils.fields import AutoCreatedField
 
+from model_utils.fields import AutoCreatedField
 from image_management.celery import app
 
 
@@ -14,7 +13,10 @@ class ConversionTask(models.Model):
 
     @property
     def celery_status(self):
-        return app.AsyncResult(self.task_id).status
+        try:
+            return app.AsyncResult(self.task_id).status
+        except:
+            return "FAILURE"
 
     class Meta:
         ordering = ["-uploaded", "name"]

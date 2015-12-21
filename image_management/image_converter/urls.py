@@ -13,7 +13,6 @@ urlpatterns =[
     url(r'^cancel_tasks', views.cancel_task, name='cancel_tasks'),
     url(r'^get_image/(?P<pk>\d+)/', views.manage_tasks, name='get_image'),
     url(r'^upload', views.create_tasks, name='upload'),
-    url(r'^show/(?P<image_id>[A-Za-z0-9.,_-]+)$', views.show_view, name='show'),
 ]
 
 

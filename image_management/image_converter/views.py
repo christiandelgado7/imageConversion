@@ -23,7 +23,7 @@ def create_tasks(request):
                     form.instance.task_id = task.task_id
                     form.instance.save()
                     success_message = "Task created"
-                except IOError as e:
+                except Exception as e:
                     error_message = ("Error creating the Task: %s" % str(e))
         else:
             error_message = "Invalid Values"
@@ -66,10 +66,10 @@ def list_images(request):
     task_list = ConversionTask.objects.all().order_by('uploaded')
     image_list = []
     for task in task_list:
-        if task.celery_status == "SUCCESS":
-            image_list.append(task)
+        try:
+            if task.celery_status == "SUCCESS":
+                image_list.append(task)
+        except Exception as e:
+            print("Error listing the task '%d': %s" % (task.pk, str(e)))
     return render(request, "list_images.html", {"image_list": image_list})
 
-
-def show_view(request, image_id):
-    return HttpResponse("this is image %s." % image_id)
